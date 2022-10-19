@@ -9,7 +9,7 @@ int main(int argc, char const *argv[])
     if (words_file == NULL)
         return 1;
 
-    long long max_words = 10;
+    long long max_words = INIT_MAX_WORDS;
     long long num_words = 0;
     char (*words)[WORD_LEN + 1];
     words = malloc(max_words*sizeof(*words));
