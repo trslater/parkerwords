@@ -1,3 +1,7 @@
+// https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt
+
+// TODO: write words directly into words
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,9 +21,17 @@ int main(int argc, char const *argv[])
     char c;
     int i = 0;      // Line counter
     int j = 0;      // Char counter
+    // int valid = 1;
 
     while ((c = fgetc(words_file)) != EOF)
     {
+        // for (int k = 0; k < j; ++k) {
+        //     if (word[k] == c && j < WORD_LEN) {
+        //         valid = 0;
+        //         break;
+        //     }
+        // }
+
         // If at end of line
         if (c == '\n')
         {
@@ -39,15 +51,22 @@ int main(int argc, char const *argv[])
          
             ++i;        // Advance line
             j = 0;      // Reset read head
+            // valid = 1;
         }
-        else if (j < WORD_LEN) word[j++] = c;
-    }
-
-    for (int l = 0; l < num_words; ++l) {
-        printf("%s\n", words[l]);
+        else {
+            // Part of valid word
+            if (j < WORD_LEN) word[j] = c;
+            ++j;
+        }
     }
 
     fclose(words_file);
+
+
+    for (int l = 0; l < 10; ++l) {
+        printf("%s\n", words[l]);
+    }
+
     free(words);
     return 0;
 }
