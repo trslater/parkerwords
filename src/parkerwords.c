@@ -63,9 +63,16 @@ int main(int argc, char const *argv[])
     fclose(words_file);
 
 
-    for (int l = 0; l < 10000; ++l) {
-        printf("%s\n", words[l]);
+    for (int l = 0; l < num_words; ++l) {
+        printf("%s ", words[l]);
+
+        if (l % 10 == 0) {
+            printf("\n");
+        }
     }
+
+    printf("\n");
+    printf("Word count: %lld\n", num_words);
 
     free(words);
     return 0;
