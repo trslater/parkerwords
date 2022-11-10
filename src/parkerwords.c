@@ -7,6 +7,8 @@
 #include <string.h>
 #include "parkerwords.h"
 
+long hash(char *);
+
 int main(int argc, char const *argv[])
 {
     FILE *words_file = fopen(argv[1], "r");
@@ -22,6 +24,8 @@ int main(int argc, char const *argv[])
     int i = 0;      // Line counter
     int j = 0;      // Char counter
     int valid = 1;
+
+    char *hash_table[((long)1 << 32)] = {NULL};
 
     while ((c = fgetc(words_file)) != EOF)
     {
@@ -64,11 +68,19 @@ int main(int argc, char const *argv[])
 
 
     for (int l = 0; l < num_words; ++l) {
-        printf("%s ", words[l]);
-
-        if (l % 10 == 0) {
-            printf("\n");
+        // printf("%s ", words[l]);
+        long h = hash(words[l]);
+        if (hash_table[h] != NULL) {
+            printf("Already occupied\n");
+            // break;
         }
+        else {
+            hash_table[h] = words[l];
+        }
+
+        // if (l % 10 == 0) {
+        //     printf("\n");
+        // }
     }
 
     printf("\n");
@@ -76,4 +88,20 @@ int main(int argc, char const *argv[])
 
     free(words);
     return 0;
+}
+
+long hash(char *s)
+{
+    long h = 0;
+
+    for (int i = 0; i < 5; ++i) {
+        long p = 1;
+        for (int j = 0; j < i; ++j) {
+            p *= 23;
+        }
+        h += p*(long)(*s++);
+    }
+    h %= ((long)1 << 32);
+
+    return h; 
 }
