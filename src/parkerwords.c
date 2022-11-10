@@ -7,7 +7,12 @@
 #include <string.h>
 #include "parkerwords.h"
 
-long hash(char *);
+#define NUM_COMBOS 65780
+#define WORD_LEN 5
+
+long combo_num(char *);
+long ncr(long, long);
+long falling_fact(long, long);
 
 int main(int argc, char const *argv[])
 {
@@ -15,93 +20,68 @@ int main(int argc, char const *argv[])
     if (words_file == NULL)
         return 1;
 
-    long long max_words = INIT_MAX_WORDS;
-    long long num_words = 0;
-    char (*words)[WORD_LEN + 1];
-    words = malloc(max_words*sizeof(*words));
-    char word[WORD_LEN + 1];
+    // int used[NUM_COMBOS] = {0};
+
     char c;
-    int i = 0;      // Line counter
-    int j = 0;      // Char counter
-    int valid = 1;
+    char word[WORD_LEN + 1];
+    int i = 0;
 
-    char *hash_table[((long)1 << 32)] = {NULL};
-
+    int t = 0;
     while ((c = fgetc(words_file)) != EOF)
     {
-        for (int k = 0; k < j; ++k) {
-            if (word[k] == c && j < WORD_LEN) {
-                valid = 0;
-                break;
-            }
-        }
-
-        // If at end of line
         if (c == '\n')
         {
-            // If end of line is at end of desired word length
-            if (j == WORD_LEN && valid) {
-                // printf("Max words: %lld\n", max_words);
-                if (num_words == max_words) {
-                    max_words *= 2;
-                    // printf("Updated max words: %lld\n", max_words);
-                    words = realloc(words, (WORD_LEN + 1)*max_words);
-                }
-                
-                // printf("Word %lld: %s\n", num_words, word);
-                strncpy(words[num_words], word, WORD_LEN);
-                ++num_words;
+            if (i == WORD_LEN)
+            {
+                printf("%s\n", word);
+                // long i = combo_num(word);
+                // printf("%ld\n", i);
+                ++t;
             }
-         
-            ++i;        // Advance line
-            j = 0;      // Reset read head
-            valid = 1;
+            i = 0;
+            continue;
         }
-        else {
-            // Part of valid word
-            if (j < WORD_LEN) word[j] = c;
-            ++j;
+        else if (i < WORD_LEN)
+        {
+            word[i] = c;
         }
+        ++i;
     }
 
     fclose(words_file);
-
-
-    for (int l = 0; l < num_words; ++l) {
-        // printf("%s ", words[l]);
-        long h = hash(words[l]);
-        if (hash_table[h] != NULL) {
-            printf("Already occupied\n");
-            // break;
-        }
-        else {
-            hash_table[h] = words[l];
-        }
-
-        // if (l % 10 == 0) {
-        //     printf("\n");
-        // }
-    }
-
-    printf("\n");
-    printf("Word count: %lld\n", num_words);
-
-    free(words);
     return 0;
 }
 
-long hash(char *s)
+long combo_num(char *s)
 {
-    long h = 0;
+    long i = 0;
 
-    for (int i = 0; i < 5; ++i) {
-        long p = 1;
-        for (int j = 0; j < i; ++j) {
-            p *= 23;
-        }
-        h += p*(long)(*s++);
+    for (int k = 1; k <= WORD_LEN; ++k)
+    {
+        long ck = (long)(*s) - 97;
+        i += ncr(ck, k);
+        ++s;
     }
-    h %= ((long)1 << 32);
 
-    return h; 
+    return i;
+}
+
+long ncr(long n, long r)
+{
+    if (n < r) return 0;
+    // Minimize number of multiplications
+    long d = n - r;
+    long k = (d < r) ? d : r;
+
+    return falling_fact(n, k)/falling_fact(k, k);
+}
+
+long falling_fact(long n, long r)
+{
+    long f = 1;
+
+    for (long t = n; t > (n - r); --t)
+        f *= t;
+
+    return f;
 }
