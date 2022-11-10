@@ -13,8 +13,13 @@ def main():
     
     for i, anagrams in enumerate(anagram_sets):
         if anagrams:
-            print(i, anagrams)
+            print(i, end=" ")
 
+            for anagram in anagrams:
+                print(anagram, end=" ")
+            
+            print()
+    
 
 def combinadics(word_gen):
     anagram_sets = tuple(set() for _ in range(comb(26, 5)))
