@@ -26,7 +26,6 @@ int main(int argc, char const *argv[])
     char word[WORD_LEN + 1];
     int i = 0;
 
-    int t = 0;
     while ((c = fgetc(words_file)) != EOF)
     {
         if (c == '\n')
@@ -36,7 +35,6 @@ int main(int argc, char const *argv[])
                 printf("%s\n", word);
                 // long i = combo_num(word);
                 // printf("%ld\n", i);
-                ++t;
             }
             i = 0;
             continue;
