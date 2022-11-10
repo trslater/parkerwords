@@ -9,21 +9,21 @@ import sys
 
 
 def main():
-    words = combinadics(map(str.strip, sys.stdin))
+    anagram_sets = combinadics(map(str.strip, sys.stdin))
     
-    for i, anagrams in enumerate(words):
+    for i, anagrams in enumerate(anagram_sets):
         if anagrams:
             print(i, anagrams)
 
 
 def combinadics(word_gen):
-    words = tuple([] for _ in range(comb(26, 5)))
+    anagram_sets = tuple(set() for _ in range(comb(26, 5)))
 
     for word in word_gen:
         if len(word) == 5 and has_no_repeats(word):
-            words[index(offset(word))].append(word)
+            anagram_sets[index(offset(word))].add(word)
 
-    return words
+    return anagram_sets
 
 
 def has_no_repeats(word):
