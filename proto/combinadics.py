@@ -9,14 +9,14 @@ import sys
 
 
 def main():
-    words = combinatics(map(str.strip, sys.stdin))
+    words = combinadics(map(str.strip, sys.stdin))
     
     for i, anagrams in enumerate(words):
         if anagrams:
             print(i, anagrams)
 
 
-def combinatics(word_gen):
+def combinadics(word_gen):
     words = tuple([] for _ in range(comb(26, 5)))
 
     for word in word_gen:
